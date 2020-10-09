@@ -24,7 +24,7 @@
 			</div>
 		</div>
     <Main />
-    <a href="https://console.aws.amazon.com/amplify/home#/deploy?repo=https://github.com/sw-yx/demo-amplify-storage-file-upload">
+    <a class="mb-16 flex justify-center" href="https://console.aws.amazon.com/amplify/home#/deploy?repo=https://github.com/sw-yx/demo-amplify-storage-file-upload">
       <img src="https://oneclick.amplifyapp.com/button.svg" alt="Deploy to Amplify Console">
     </a>
 	</div>
