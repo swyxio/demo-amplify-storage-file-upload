@@ -14,6 +14,12 @@
         "categories": {
             "auth": {
                 "amplifysvelteapps3up7f0f6886": {}
+            },
+            "hosting": {
+                "amplifyhosting": {
+                    "appId": "dslqgnfryboxo",
+                    "type": "manual"
+                }
             }
         }
     }

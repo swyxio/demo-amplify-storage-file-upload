@@ -4,6 +4,8 @@
 
 ![image](https://user-images.githubusercontent.com/6764957/95610354-c7e35700-0a92-11eb-815e-e55a64499df6.png)
 
+Live demo: https://dev.dslqgnfryboxo.amplifyapp.com/
+
 ## Features demonstrated
 
 - Upload file
@@ -15,6 +17,7 @@
 
 Possible extensions left as an exercise to reader:
 
+- Clientside routing - to make "Back" button work with folders
 - Auth + Private/protected files
 - Upload entire folders
 - Recursively delete folder
