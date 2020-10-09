@@ -11,7 +11,7 @@ I would really love to give you a live demo but you can understand the security 
 
 ## Features demonstrated
 
-- Upload file
+- Upload file with progress bar
 - List files (with metadata)
 - Delete files
 - Download files
@@ -22,6 +22,7 @@ Possible extensions left as an exercise to reader:
 
 - Clientside routing - to make "Back" button work with folders
 - Auth + Private/protected files
+- S3 + AWS Lambda Trigger to validate/screen the content uploaded
 - Upload entire folders
 - Recursively delete folder
 
