@@ -1,8 +1,10 @@
 <script>
   import { Storage } from "aws-amplify";
-  import { formatBytes, downloadBlob } from "./utils.js";
+  import { formatBytes, processStorageList } from "./utils.js";
   import Toast from "./Toast.svelte";
   import DownloadButton from "./DownloadButton.svelte";
+  import { onMount } from "svelte";
+  onMount(loadFiles);
   let loading = true;
   let folders = [];
   let progressPercent = null;
@@ -45,9 +47,7 @@
         fireToast("Error loading files", err.message);
         console.error(err);
       })
-      .finally(() => {
-        loading = false;
-      });
+      .finally(() => loading = false);
   }
 
   function onSubmit(e) {
@@ -75,47 +75,18 @@
       let temp = currentPath
         .split("/")
         .reduce((acc, cv) => (cv ? acc[cv] : acc), res);
-      // console.log({currentPath, temp})
       let _res = Object.entries(temp).filter(([LHS]) => LHS !== "__data");
       folders = _res
-        .filter(
-          ([LHS, RHS]) => console.log({ LHS, RHS }) || RHS.__data.size < 1
-        )
+        .filter(([LHS, RHS]) => RHS.__data.size < 1)
         .map(([LHS]) => LHS);
       files = _res
         .filter(([LHS, RHS]) => RHS.__data.size > 0)
         .map(([LHS, RHS]) => RHS);
-      // console.log({folders, files})
     }
   }
-
-  function processStorageList(results) {
-    const filesystem = {};
-    // https://stackoverflow.com/questions/44759750/how-can-i-create-a-nested-object-representation-of-a-folder-structure
-    const add = (source, target, item) => {
-      const elements = source.split("/");
-      const element = elements.shift();
-      if (!element) return; // blank
-      target[element] = target[element] || { __data: item }; // element;
-      if (elements.length) {
-        target[element] =
-          typeof target[element] === "object" ? target[element] : {};
-        add(elements.join("/"), target[element], item);
-      }
-    };
-
-    results.forEach((item) => add(item.key, filesystem, item));
-    return filesystem;
-  }
-  import { onMount } from "svelte";
-  onMount(() => {
-    loadFiles();
-  });
 </script>
 
-<style>
-</style>
-
+<Toast {toast} />
 <main class="mb-16">
   <!-- header -->
   <div class="bg-white">
@@ -127,7 +98,6 @@
       </div>
     </div>
   </div>
-  <Toast {toast} />
   <!-- body -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- We've used 3xl here, but feel free to try other max-widths based on your needs -->
