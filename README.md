@@ -4,7 +4,20 @@
 
 ![image](https://user-images.githubusercontent.com/6764957/95610354-c7e35700-0a92-11eb-815e-e55a64499df6.png)
 
+## Features demonstrated
 
+- Upload file
+- List files (with metadata)
+- Delete files
+- Download files
+- Create folder
+- Toast success/failure
+
+Possible extensions left as an exercise to reader:
+
+- Auth + Private/protected files
+- Upload entire folders
+- Recursively delete folder
 
 ## Local Development
 

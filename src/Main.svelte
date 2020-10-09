@@ -1,32 +1,50 @@
 <script>
   import { Storage } from "aws-amplify";
-  import {formatBytes, downloadBlob} from './utils.js'
+  import { formatBytes, downloadBlob } from "./utils.js";
+  import Toast from "./Toast.svelte";
+  import DownloadButton from "./DownloadButton.svelte";
   let loading = true;
   let folders = [];
   let progressPercent = null;
   let files = [];
   let res = null;
   let currentPath = "";
-  $: splitPaths = currentPath.split('/').filter(Boolean)
+  let toast;
+  let toastTimeout;
+  const closeMe = () => {
+    toast = undefined;
+    if (toastTimeout) clearTimeout(toastTimeout);
+  };
+  const fireToast = (title, message) => {
+    toast = { title, message, closeMe };
+    toastTimeout = setTimeout(closeMe, 5000);
+  };
+  $: splitPaths = currentPath.split("/").filter(Boolean);
   function createFolder(e) {
     let newName = window.prompt("Name of New Folder");
     if (newName) {
       Storage.put(currentPath + newName, undefined)
         .then(() => {
-          loading = true;
+          fireToast("Folder created!");
           loadFiles();
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          fireToast("Error creating folders", err.message);
+          console.error(err);
+        });
     }
   }
 
-  
   async function loadFiles() {
-    return Storage.list("fodder/")
+    loading = true;
+    return Storage.list("")
       .then((result) => {
         res = processStorageList(result);
       })
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        fireToast("Error loading files", err.message);
+        console.error(err);
+      })
       .finally(() => {
         loading = false;
       });
@@ -41,11 +59,15 @@
       },
     })
       .then(() => {
+        fireToast("File uploaded!");
         progressPercent = null;
-        loading = true;
         loadFiles();
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        fireToast("Error uploading file", err.message);
+        console.error(err);
+        progressPercent = null;
+      });
   }
 
   $: {
@@ -105,7 +127,7 @@
       </div>
     </div>
   </div>
-
+  <Toast {toast} />
   <!-- body -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- We've used 3xl here, but feel free to try other max-widths based on your needs -->
@@ -118,9 +140,13 @@
           {#each splitPaths as crumb, i}
           <li class="flex items-center">
             <svg class="fill-current w-3 h-3 mx-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg>
-            <button class="border-0" on:click={() => {
-              currentPath = splitPaths.slice(0, i+1).join('/') + '/'
-            }}>{crumb}</button>
+            {#if i === splitPaths.length - 1}
+              {crumb}
+            {:else}
+              <button class="border-0" on:click={() => {
+                currentPath = splitPaths.slice(0, i+1).join('/') + '/'
+              }}>{crumb}</button>
+            {/if}
           </li>
           {/each}
           <!-- <li>
@@ -153,76 +179,83 @@
                 <tbody>
                   {#if loading}
                     <tr class="bg-white">
-                      <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 font-medium text-gray-900">
+                      <td class="animate-pulse px-6 py-4 whitespace-no-wrap text-sm leading-5 font-medium text-gray-900">
                         🌀 Loading...
                       </td>
                     </tr>
-                  {/if}      
-                  {#each folders as folder, i}
-                    <tr class="bg-white" class:bg-gray-50={i % 2}>
-                      <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 font-medium text-gray-900">
-                        <svg class="w-6 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-                        </svg>
-                        <button class="border-0" on:click={() => currentPath += folder + '/'}>{folder}</button>
-                      </td>
-                      <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-500">
-                        {folder.__data ? folder.__data.lastModified.toString().slice(0,24) : ''}
-                      </td>
-                      <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-500">
-                        
-                      </td>
-                      <td class="px-6 py-4 whitespace-no-wrap text-right text-sm leading-5 font-medium">
-                        <a href="#" class="text-indigo-600 hover:text-indigo-900">Delete</a>
-                      </td>
-                    </tr>
-                  {/each}
-                  <tr class="bg-white">
-                    <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 font-medium text-teal-700">
-                      <button class="border-0" on:click={createFolder}>
-                        <svg class="w-6 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-                        </svg>
-                        Create New Folder</button>
-                    </td>
-                  </tr>
-                  <!-- Odd row -->
-
-                  {#each files as file, i}
-                    <tr class="bg-white" class:bg-gray-50={i % 2}>
-                      <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 font-medium text-gray-900">
-                        <svg class="w-6 inline"  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                        </svg>
-                        <button class="border-0" on:click={() => {
-                            Storage.get(file.__data.key, { download: true })
-                            .then(res => console.log({res}) || downloadBlob(res.Body, file.__data.key.slice(currentPath.length)))
-                        }}>{file.__data.key.slice(currentPath.length)}</button>
-                      </td>
-                      <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-500">
-                        {file.__data.lastModified.toString().slice(0,24)}
-                      </td>
-                      <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-500">
-                        {formatBytes(file.__data.size)}
-                      </td>
-                      <td class="px-6 py-4 whitespace-no-wrap text-right text-sm leading-5 font-medium">
-                        <a href="#" class="text-indigo-600 hover:text-indigo-900">Delete</a>
-                      </td>
-                    </tr>
                   {:else}
-                    <tr class="bg-white" class:bg-gray-50={i % 2}>
-                      <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 font-medium text-gray-900">
-                        This folder is empty!
-                      </td>
-                      <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-500">
-                      </td>
-                      <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-500">
-                      </td>
-                      <td class="px-6 py-4 whitespace-no-wrap text-right text-sm leading-5 font-medium">
+                    {#each folders as folder, i}
+                      <tr class="bg-white" class:bg-gray-50={i % 2}>
+                        <td class="flex px-6 py-4 whitespace-no-wrap text-sm leading-5 font-medium text-gray-900">
+                          <svg class="w-6 mr-2 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                          </svg>
+                          <button class="border-0" on:click={() => currentPath += folder + '/'}>{folder}</button>
+                        </td>
+                        <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-500">
+                          {folder.__data ? folder.__data.lastModified.toString().slice(0,24) : ''}
+                        </td>
+                        <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-500">
+                          
+                        </td>
+                        <td class="px-6 py-4 whitespace-no-wrap text-right text-sm leading-5 font-medium">
+                          <!-- <a href="#" class="text-indigo-600 hover:text-indigo-900">Delete</a> -->
+                        </td>
+                      </tr>
+                    {/each}
+                    <tr class="bg-white">
+                      <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 font-medium text-teal-700">
+                        <button class="flex items-center border-0" on:click={createFolder}>
+                          <svg class="w-6 mr-2 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                          </svg>
+                          Create New Folder</button>
                       </td>
                     </tr>
-                  {/each}
+                    <!-- Odd row -->
 
+                    {#each files as file, i}
+                      <tr class="bg-white" class:bg-gray-50={i % 2}>
+                        <td class="flex px-6 py-4 whitespace-no-wrap text-sm leading-5 font-medium text-gray-900">
+                          <svg class="w-6 mr-2 inline"  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                          </svg>
+                          <DownloadButton {file} {fireToast} fileName={file.__data.key.slice(currentPath.length)} />
+                        </td>
+                        <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-500">
+                          {file.__data.lastModified.toString().slice(0,24)}
+                        </td>
+                        <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-500">
+                          {formatBytes(file.__data.size)}
+                        </td>
+                        <td class="px-6 py-4 whitespace-no-wrap text-right text-sm leading-5 font-medium">
+                          <button on:click={
+                            Storage.remove(file.__data.key).then(() => {
+                              fireToast('File deleted!', file.__data.key)
+                              loadFiles()
+                            })
+                            .catch((err) => {
+                              fireToast('Error deleting file', err.message)
+                              console.error(err)
+                            })
+                          } class="border-0 text-indigo-600 hover:text-indigo-900">Delete</button>
+                        </td>
+                      </tr>
+                    {:else}
+                      <tr class="bg-white" class:bg-gray-50={i % 2}>
+                        <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 font-medium text-gray-900">
+                          This folder is empty!
+                        </td>
+                        <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-500">
+                        </td>
+                        <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-500">
+                        </td>
+                        <td class="px-6 py-4 whitespace-no-wrap text-right text-sm leading-5 font-medium">
+                        </td>
+                      </tr>
+                    {/each}
+
+                  {/if}
                   <tr class="bg-white mb-8">
                     <td colspan="4">
                     <!-- submit form -->
@@ -241,17 +274,20 @@
                           </div>
 
                           <div class="mt-6">
-                            <span class="block w-full rounded-md shadow-sm">
-                              <button type="submit" class="flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
-                                <svg class="w-6 inline"  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                </svg>
-                                Upload
-                              </button>
-                            </span>
                             {#if progressPercent !== null}
-                              <label for="file">Uploading {Math.round(progressPercent * 100)}%...</label>
-                              <progress id="file" max={1} value={progressPercent}> {Math.round(progressPercent * 100)}% </progress>
+                              <div class="inline-flex flex-col">
+                                <label for="file">Uploading {Math.round(progressPercent * 100)}%...</label>
+                                <progress id="file" max={1} value={progressPercent}> {Math.round(progressPercent * 100)}% </progress>
+                              </div>
+                            {:else}
+                              <span class="block w-full rounded-md shadow-sm">
+                                <button type="submit" class="flex items-center justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
+                                  <svg class="w-6 inline mr-4"  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                  </svg>
+                                  Upload
+                                </button>
+                              </span>
                             {/if}
                           </div>
                         </form>
