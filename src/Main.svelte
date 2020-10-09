@@ -7,6 +7,7 @@
   let files = [];
   let res = null;
   let currentPath = "";
+  $: splitPaths = currentPath.split('/').filter(Boolean)
   function createFolder(e) {
     let newName = window.prompt("Name of New Folder");
     if (newName) {
@@ -93,14 +94,14 @@
 <style>
 </style>
 
-<main>
+<main class="mb-16">
   <!-- header -->
   <div class="bg-white">
     <div class="max-w-screen-xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
       <div class="text-center">
-        <h1 class="text-base leading-6 font-semibold text-indigo-600 tracking-wide uppercase">Amplify Storage + Svelte</h1>
-        <p class="mt-1 text-4xl leading-10 font-extrabold text-gray-900 sm:text-5xl sm:leading-none sm:tracking-tight lg:text-6xl">File Upload and Navigation Demo</p>
-        <p class="max-w-xl mt-5 mx-auto text-xl leading-7 text-gray-500">Upload any file to AWS S3, and browse your files.</p>
+        <h1 class="text-base leading-6 font-semibold text-indigo-600 tracking-wide uppercase">Built with Svelte + Tailwind + AWS Amplify</h1>
+        <p class="mt-1 text-4xl leading-10 font-extrabold text-gray-900 sm:text-5xl sm:leading-none sm:tracking-tight lg:text-6xl">AmpliBox</p>
+        <p class="max-w-xl mt-5 mx-auto text-xl leading-7 text-gray-500">Upload any file to S3, and browse/download them.</p>
       </div>
     </div>
   </div>
@@ -109,7 +110,26 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- We've used 3xl here, but feel free to try other max-widths based on your needs -->
     <div class="max-w-3xl mx-auto">
-      <div>Path: {currentPath || '/'}</div>
+      <nav class="text-black font-bold my-8" aria-label="Breadcrumb">
+        <ol class="list-none p-0 inline-flex">
+          <li class="flex items-center">
+            <button class="border-0" on:click={() => currentPath = ''}>/</button>
+          </li>
+          {#each splitPaths as crumb, i}
+          <li class="flex items-center">
+            <svg class="fill-current w-3 h-3 mx-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg>
+            <button class="border-0" on:click={() => {
+              currentPath = splitPaths.slice(0, i+1).join('/') + '/'
+            }}>{crumb}</button>
+          </li>
+          {/each}
+          <!-- <li>
+            <a href="#" class="text-gray-500" aria-current="page">Third Level</a>
+          </li> -->
+        </ol>
+      </nav>
+
+
 
       <div class="flex flex-col">
         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -131,16 +151,6 @@
                   </tr>
                 </thead>
                 <tbody>
-                  {#if currentPath}
-                    <tr class="bg-white">
-                      <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 font-medium text-teal-800">
-                        <svg class="w-6 inline"  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414a2 2 0 001.414.586H19a2 2 0 002-2V7a2 2 0 00-2-2h-8.172a2 2 0 00-1.414.586L3 12z" />
-                        </svg>
-                        <button class="border-0" on:click={() => currentPath = currentPath.split('/').filter(Boolean).slice(0,-1).join('/') + '/'}>Back</button>
-                      </td>
-                    </tr>
-                  {/if}
                   {#if loading}
                     <tr class="bg-white">
                       <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 font-medium text-gray-900">
@@ -213,6 +223,42 @@
                     </tr>
                   {/each}
 
+                  <tr class="bg-white mb-8">
+                    <td colspan="4">
+                    <!-- submit form -->
+                    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+                      <div class="bg-white py-8 px-4 sm:rounded-lg sm:px-10">
+                        <form on:submit|preventDefault={onSubmit}>
+                          <div>
+                            <label for="fileInput" class="sr-only block text-sm font-medium leading-5 text-gray-700">
+                              Choose a file to upload
+                            </label>
+                            <div class="mt-1 rounded-md shadow-sm">
+                              <input type="file" name="fileInput" id="fileInput" 
+                              required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                              />
+                            </div>
+                          </div>
+
+                          <div class="mt-6">
+                            <span class="block w-full rounded-md shadow-sm">
+                              <button type="submit" class="flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
+                                <svg class="w-6 inline"  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                Upload
+                              </button>
+                            </span>
+                            {#if progressPercent !== null}
+                              <label for="file">Uploading {Math.round(progressPercent * 100)}%...</label>
+                              <progress id="file" max={1} value={progressPercent}> {Math.round(progressPercent * 100)}% </progress>
+                            {/if}
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -221,38 +267,6 @@
       </div>
 
 
-      <!-- submit form -->
-      <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <form on:submit|preventDefault={onSubmit}>
-            <div>
-              <label for="fileInput" class="sr-only block text-sm font-medium leading-5 text-gray-700">
-                Choose a file to upload
-              </label>
-              <div class="mt-1 rounded-md shadow-sm">
-                <input type="file" name="fileInput" id="fileInput" 
-                required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-                />
-              </div>
-            </div>
-
-            <div class="mt-6">
-              <span class="block w-full rounded-md shadow-sm">
-                <button type="submit" class="flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
-                  <svg class="w-6 inline"  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  Upload
-                </button>
-              </span>
-              {#if progressPercent !== null}
-                <label for="file">Uploading {Math.round(progressPercent * 100)}%...</label>
-                <progress id="file" max={1} value={progressPercent}> {Math.round(progressPercent * 100)}% </progress>
-              {/if}
-            </div>
-          </form>
-        </div>
-      </div>
     </div>
   </div>
 </main>

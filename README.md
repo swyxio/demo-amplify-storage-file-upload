@@ -1,64 +1,42 @@
-# svelte app
+# AmpliBox
 
-This is a project template for [Svelte](https://svelte.dev) apps. It lives at https://github.com/sveltejs/template-webpack.
+> Full Amplify Storage demo showing how to build an app to upload and navigate files in AWS S3
 
-To create a new project based on this template using [degit](https://github.com/Rich-Harris/degit):
+![image](https://user-images.githubusercontent.com/6764957/95610354-c7e35700-0a92-11eb-815e-e55a64499df6.png)
+
+
+
+## Local Development
+
+If you clone this repo you will need to setup an AWS Amplify environment for your project. Assuming you have the [Amplify CLI installed and configured](https://docs.amplify.aws/cli):
 
 ```bash
-npx degit sveltejs/template-webpack svelte-app
-cd svelte-app
+amplify init # default answers all fine
+amplify add storage # default answers all fine, add auth if asked
+
+amplify push # this step provisions your project resources in the cloud (long)
 ```
 
-*Note that you will need to have [Node.js](https://nodejs.org) installed.*
-
-
-## Get started
-
-Install the dependencies...
+If you want to run this project locally, install the dependencies...
 
 ```bash
-cd svelte-app
 npm install
 ```
 
 ...then start webpack:
 
 ```bash
-npm run dev
+npm start
 ```
 
 Navigate to [localhost:8080](http://localhost:8080). You should see your app running. Edit a component file in `src`, save it, and the page should reload with your changes.
 
-
 ## Deploying to the web
 
-### With [now](https://zeit.co/now)
-
-Install `now` if you haven't already:
+You can deploy to [Amplify Console](https://docs.aws.amazon.com/amplify/latest/userguide/welcome.html) or any other static site host. Before you deploy, we recommend [creating a new repo](https://repo.new) and pushing your code there so as to automatically set up CI/CD for you.
 
 ```bash
-npm install -g now
-```
+amplify add hosting # customize as needed
 
-Then, from within your project folder:
-
-```bash
-now
-```
-
-As an alternative, use the [Now desktop client](https://zeit.co/download) and simply drag the unzipped project folder to the taskbar icon.
-
-### With [surge](https://surge.sh/)
-
-Install `surge` if you haven't already:
-
-```bash
-npm install -g surge
-```
-
-Then, from within your project folder:
-
-```bash
-npm run build
-surge public
+amplify publish # to actually publish to the open web (long)
 ```
