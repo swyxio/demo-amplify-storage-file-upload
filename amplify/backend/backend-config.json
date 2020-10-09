@@ -1,0 +1,15 @@
+{
+	"auth": {
+		"amplifysvelteapps3up7f0f6886": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": []
+		}
+	},
+	"storage": {
+		"s3e6972a5a": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation"
+		}
+	}
+}
