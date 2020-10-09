@@ -8,8 +8,8 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6">
       <div class="flex justify-between items-center py-6 md:justify-start md:space-x-10">
         <div class="w-0 flex-1 flex">
-          <a href="https://docs.amplify.aws/" class="inline-flex">
-            <img class="h-8 w-auto sm:h-10" src="https://s3.amazonaws.com/aws-mobile-hub-images/aws-amplify-logo.png" alt="Amplify">
+          <a href="https://docs.amplify.aws/lib/storage/getting-started/q/platform/js" class="inline-flex">
+            <img class="sm:h-8 w-32 sm:w-auto sm:h-10" src="https://s3.amazonaws.com/aws-mobile-hub-images/aws-amplify-logo.png" alt="Amplify">
           </a>
         </div>
         <nav class="flex spa![image](https://user-images.githubusercontent.com/6764957/95610354-c7e35700-0a92-11eb-815e-e55a64499df6.png)
@@ -23,7 +23,10 @@
         </nav>
 			</div>
 		</div>
-		<Main />
+    <Main />
+    <a href="https://console.aws.amazon.com/amplify/home#/deploy?repo=https://github.com/sw-yx/demo-amplify-storage-file-upload">
+      <img src="https://oneclick.amplifyapp.com/button.svg" alt="Deploy to Amplify Console">
+    </a>
 	</div>
 </div>
 

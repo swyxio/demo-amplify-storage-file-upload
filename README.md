@@ -4,7 +4,10 @@
 
 ![image](https://user-images.githubusercontent.com/6764957/95610354-c7e35700-0a92-11eb-815e-e55a64499df6.png)
 
-Live demo: https://dev.dslqgnfryboxo.amplifyapp.com/
+I would really love to give you a live demo but you can understand the security issue here. Instead, you should deploy it for yourself!
+
+[![amplifybutton](https://oneclick.amplifyapp.com/button.svg)](https://console.aws.amazon.com/amplify/home#/deploy?repo=https://github.com/sw-yx/demo-amplify-storage-file-upload)
+
 
 ## Features demonstrated
 

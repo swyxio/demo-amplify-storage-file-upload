@@ -135,7 +135,11 @@
       <nav class="text-black font-bold my-8" aria-label="Breadcrumb">
         <ol class="list-none p-0 inline-flex">
           <li class="flex items-center">
-            <button class="border-0" on:click={() => currentPath = ''}>/</button>
+            {#if splitPaths.length}
+              <button class="border-0" on:click={() => currentPath = ''}>Root</button>
+            {:else}
+              You are at the root folder.
+            {/if}
           </li>
           {#each splitPaths as crumb, i}
           <li class="flex items-center">
