@@ -14,7 +14,7 @@
         </div>
         <nav class="flex spa![image](https://user-images.githubusercontent.com/6764957/95610354-c7e35700-0a92-11eb-815e-e55a64499df6.png)
 				ce-x-10">
-          <a href="https://docs.amplify.aws/" class="text-base leading-6 font-medium text-gray-500 hover:text-gray-900 transition ease-in-out duration-150">
+          <a href="https://docs.amplify.aws/lib/storage/getting-started/q/platform/js" class="text-base leading-6 font-medium text-gray-500 hover:text-gray-900 transition ease-in-out duration-150">
             Docs
           </a>
           <a href="https://github.com/sw-yx/demo-amplify-storage-file-upload" class="w-6 ml-4 text-base leading-6 font-medium text-gray-500 hover:text-gray-900 transition ease-in-out duration-150">
