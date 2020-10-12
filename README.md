@@ -69,3 +69,9 @@ amplify add hosting # customize as needed
 
 amplify publish # to actually publish to the open web (long)
 ```
+
+
+
+## Help me share this
+
+If you liked this demo, you can help me [share it on Twitter](https://twitter.com/swyx/status/1315695498032902144?s=20) or [signup to my YouTube](https://youtu.be/Be0hmfNMdxI)!
