@@ -2,7 +2,9 @@
 
 > Full Amplify Storage demo showing how to build an app to upload and navigate files in AWS S3
 
-![image](https://user-images.githubusercontent.com/6764957/95610354-c7e35700-0a92-11eb-815e-e55a64499df6.png)
+
+![amplibox1](https://user-images.githubusercontent.com/6764957/95765969-2c95f000-0ce5-11eb-8452-af013c4b04e6.gif)
+
 
 I would really love to give you a live demo but you can understand the security issue here. Instead, you should deploy it for yourself!
 
