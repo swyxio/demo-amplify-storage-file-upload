@@ -15,6 +15,7 @@ I would really love to give you a live demo but you can understand the security 
 - List files (with metadata)
 - Delete files
 - Download files
+  - we use programmatic downloads here, but left instructions for signed URL downloads in DownloadButton.svelte
 - Create folder
 - Toast success/failure
 
