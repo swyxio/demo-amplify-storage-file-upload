@@ -86,6 +86,10 @@
   }
 </script>
 
+<svelte:head>
+	<title>AmpliBox: {currentPath || 'Root'}</title>
+</svelte:head>
+
 <Toast {toast} />
 <main class="mb-16">
   <!-- header -->
