@@ -21,6 +21,9 @@ I would really love to give you a live demo but you can understand the security 
 Possible extensions left as an exercise to reader:
 
 - Clientside routing - to make "Back" button work with folders
+- File search:
+  - filename search
+  - file contents search
 - Auth + Private/protected files
 - S3 + AWS Lambda Trigger to validate/screen the content uploaded
 - Upload entire folders
