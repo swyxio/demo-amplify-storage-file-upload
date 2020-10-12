@@ -3,7 +3,7 @@
 > Full Amplify Storage demo showing how to build an app to upload and navigate files in AWS S3
 
 - Blogpost: https://dev.to/swyx/amplibox-a-self-hosted-file-storage-app-with-aws-amplify-1f6g
-- Codebase Walkthrough Video: https://youtu.be/Be0hmfNMdxI
+- 6 min Codebase Walkthrough: https://youtu.be/Be0hmfNMdxI
 
 ![amplibox1](https://user-images.githubusercontent.com/6764957/95765969-2c95f000-0ce5-11eb-8452-af013c4b04e6.gif)
 
