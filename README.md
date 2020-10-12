@@ -8,6 +8,7 @@ I would really love to give you a live demo but you can understand the security 
 
 [![amplifybutton](https://oneclick.amplifyapp.com/button.svg)](https://console.aws.amazon.com/amplify/home#/deploy?repo=https://github.com/sw-yx/demo-amplify-storage-file-upload)
 
+## [Blogpost on Dev.to](https://dev.to/swyx/amplibox-a-self-hosted-file-storage-app-with-aws-amplify-1f6g)
 
 ## Features demonstrated
 
