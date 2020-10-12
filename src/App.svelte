@@ -37,7 +37,7 @@
           </a>
           <a
             href="https://dev.to/swyx/amplibox-a-self-hosted-file-storage-app-with-aws-amplify-1f6g"
-            class="text-base leading-6 font-medium text-gray-500 hover:text-gray-900 transition ease-in-out duration-150">
+            class="ml-4 text-base leading-6 font-medium text-gray-500 hover:text-gray-900 transition ease-in-out duration-150">
             Blogpost
           </a>
           <a

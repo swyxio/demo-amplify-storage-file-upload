@@ -1,3 +1,6 @@
+// if you are implementing authentication with Svelte, feel free to use this as a starting point
+// more info https://github.com/sw-yx/svelte-amplify-datastore-demo
+
 import { writable, get } from 'svelte/store';
 import {Auth} from 'aws-amplify';
 
