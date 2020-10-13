@@ -72,10 +72,10 @@
 
   $: {
     if (res) {
-      let temp = currentPath
+      let currentDirectoryData = currentPath
         .split("/")
         .reduce((acc, cv) => (cv ? acc[cv] : acc), res);
-      let _res = Object.entries(temp).filter(([LHS]) => LHS !== "__data");
+      let _res = Object.entries(currentDirectoryData).filter(([LHS]) => LHS !== "__data");
       folders = _res
         .filter(([LHS, RHS]) => RHS.__data.size < 1)
         .map(([LHS]) => LHS);

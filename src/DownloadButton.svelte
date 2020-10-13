@@ -26,6 +26,8 @@
   {#if downloading}Downloading...{:else}{fileName}{/if}
 </button>
 
+<!-- Alternative "signed URL" approach you could also use -->
+
 <!-- <script>
   import {onMount} from 'svelte'
   import { Storage } from "aws-amplify";
