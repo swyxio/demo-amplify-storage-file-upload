@@ -35,6 +35,7 @@ Possible extensions left as an exercise to reader:
 - Auth + Private/protected files
 - S3 + AWS Lambda Trigger to validate/screen the content uploaded
 - Upload entire folders
+  - useful resources https://dev.to/atapas/10-useful-html-file-upload-tips-for-web-developers-2d1d
 - Recursively delete folder
 
 ## Local Development
