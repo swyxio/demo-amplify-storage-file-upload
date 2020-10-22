@@ -44,7 +44,7 @@ If you clone this repo you will need to setup an AWS Amplify environment for you
 
 ```bash
 amplify init # default answers all fine
-amplify add storage # default answers all fine, add auth if asked
+amplify add storage # pick Content, default answers all fine, add auth if asked
 
 amplify push # this step provisions your project resources in the cloud (long)
 ```
